@@ -9,12 +9,15 @@
 
 		<!-- Vlastnosti NuGet balíčku -->
 		<PackageId>AvaloniaConstructGenerator</PackageId>
-		<Version>1.0.0</Version>
+		<Version>1.0.1</Version>
 		<Authors>Zdendaki</Authors>
 		<Description>Generates parameterless constructors for Avalonia windows for designer compatibility.</Description>
 		<Tags>avalonia;roslyn;generator;sourcegenerator</Tags>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<RepositoryUrl>https://github.com/Zdendaki/AvaloniaConstructGenerator</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageProjectUrl>https://github.com/Zdendaki/AvaloniaConstructGenerator</PackageProjectUrl>
 
 		<!-- Zabrání vložení generátoru mezi běžné závislosti -->
 		<IncludeBuildOutput>false</IncludeBuildOutput>
