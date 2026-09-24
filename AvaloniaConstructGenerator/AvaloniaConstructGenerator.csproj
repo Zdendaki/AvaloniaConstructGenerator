@@ -9,7 +9,7 @@
 
 		<!-- Vlastnosti NuGet balíčku -->
 		<PackageId>AvaloniaConstructGenerator</PackageId>
-		<Version>1.0.1</Version>
+		<Version>1.0.2</Version>
 		<Authors>Zdendaki</Authors>
 		<Description>Generates parameterless constructors for Avalonia windows for designer compatibility.</Description>
 		<Tags>avalonia;roslyn;generator;sourcegenerator</Tags>

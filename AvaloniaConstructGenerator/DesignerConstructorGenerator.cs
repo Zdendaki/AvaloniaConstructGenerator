@@ -3,6 +3,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using System;
+using System.Linq;
 using System.Text;
 
 namespace AvaloniaConstructGenerator;
@@ -17,7 +18,7 @@ public class DesignerConstructorGenerator : IIncrementalGenerator
         var provider = context.SyntaxProvider
             .CreateSyntaxProvider(
                 predicate: static (s, _) => IsPartialClass(s),
-                transform: static (ctx, _) => GetWindowSymbol(ctx))
+                transform: static (ctx, _) => GetTargetSymbol(ctx))
             .Where(static m => m is not null);
 
         context.RegisterSourceOutput(provider, static (spc, symbol) => Execute(spc, symbol!));
@@ -25,14 +26,18 @@ public class DesignerConstructorGenerator : IIncrementalGenerator
 
     private static bool IsPartialClass(SyntaxNode node) => node is ClassDeclarationSyntax classDecl && classDecl.Modifiers.Any(SyntaxKind.PartialKeyword);
 
-    private static INamedTypeSymbol? GetWindowSymbol(GeneratorSyntaxContext context)
+    private static INamedTypeSymbol? GetTargetSymbol(GeneratorSyntaxContext context)
     {
         var classDeclaration = (ClassDeclarationSyntax)context.Node;
 
         if (context.SemanticModel.GetDeclaredSymbol(classDeclaration) is not INamedTypeSymbol symbol)
             return null;
 
-        // Kontrola dědičnosti z Avalonia.Controls.Window
+        // 1. Ověření, že třída NEMÁ explicitní bezparametrický konstruktor
+        if (symbol.Constructors.Any(c => c.Parameters.Length == 0 && !c.IsImplicitlyDeclared))
+            return null;
+
+        // 2. Kontrola dědičnosti
         var baseType = symbol.BaseType;
         while (baseType != null)
         {
@@ -77,6 +82,7 @@ public class DesignerConstructorGenerator : IIncrementalGenerator
             sourceBuilder.AppendLine("}");
         }
 
-        context.AddSource($"{className}.DesignerConstructor.g.cs", SourceText.From(sourceBuilder.ToString(), Encoding.UTF8));
+        var safeNamespace = string.IsNullOrEmpty(namespaceName) ? "Global" : namespaceName;
+        context.AddSource($"{safeNamespace}.{className}.DesignerConstructor.g.cs", SourceText.From(sourceBuilder.ToString(), Encoding.UTF8));
     }
 }
