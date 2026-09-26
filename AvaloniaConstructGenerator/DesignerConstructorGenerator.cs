@@ -73,7 +73,10 @@ public class DesignerConstructorGenerator : IIncrementalGenerator
         sourceBuilder.AppendLine("    {");
         sourceBuilder.AppendLine("#pragma warning disable CS8618");
         sourceBuilder.AppendLine("        [Obsolete(\"For Avalonia Designer only\", true)]");
-        sourceBuilder.AppendLine($"        public {className}() {{ }}");
+        sourceBuilder.AppendLine($"        public {className}()");
+        sourceBuilder.AppendLine("        {");
+        sourceBuilder.AppendLine("            InitializeComponent();");
+        sourceBuilder.AppendLine("        }");
         sourceBuilder.AppendLine("#pragma warning restore CS8618");
         sourceBuilder.AppendLine("    }");
 
