@@ -60,7 +60,10 @@ namespace MyProject.Views
     {
 #pragma warning disable CS8618
         [Obsolete("For Avalonia Designer only", true)]
-        public MainWindow() { }
+        public MainWindow()
+        {
+            InitializeComponent();
+        }
 #pragma warning restore CS8618
     }
 }
